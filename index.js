@@ -1,89 +1,89 @@
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
-const Discord = require('discord.js');
-const { default: axios } = require('axios');
+const Discord = require("discord.js");
+const FormData = require("form-data");
+const { default: axios } = require("axios");
 
 const client = new Discord.Client();
 
-client.once('ready', () => {
-	console.log('Ready!');
+client.once("ready", () => {
+  console.log("Ready!");
 });
 
 client.login(process.env.TOKEN);
 
-client.on('message', message => {
-	if (message.content === '!ping') {
-		// send back "Pong." to the channel the message was sent in
-		message.channel.send('Pong.');
-	} else if(message.content === '!costs') {
-    message.channel.send(isWorthToCraft())
+client.on("message", async (message) => {
+  if (message.content === "!ping") {
+    // send back "Pong." to the channel the message was sent in
+    message.channel.send("Pong.");
+  } else if (message.content === "!costs") {
+    message.channel.send(await isWorthToCraft());
   }
 });
 
-const isWorthToCraft = () => {
-  const CLIENTID = process.env.CLIENTID
-  const CLIENTKEY = process.env.CLIENTKEY
-  const REALMID = 61 //SET THIS TO YOUR REALM ID
-  const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK
+const isWorthToCraft = async () => {
+  const CLIENTID = process.env.CLIENTID;
+  const CLIENTKEY = process.env.CLIENTKEY;
+  const REALMID = 61; //SET THIS TO YOUR REALM ID
+  const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK;
 
   const itemMap = {
     168589: {
       name: "Marrowroot",
-      value: Infinity
+      value: Infinity,
     },
     171315: {
       name: "Nightshade",
-      value: Infinity
+      value: Infinity,
     },
     168586: {
       name: "Rising Glory",
-      value: Infinity
+      value: Infinity,
     },
     168583: {
       name: "Widowbloom",
-      value: Infinity
+      value: Infinity,
     },
     170554: {
       name: "Vigil's Torch",
-      value: Infinity
+      value: Infinity,
     },
     169701: {
       name: "Deathblossom",
-      value: Infinity
+      value: Infinity,
     },
     171276: {
       name: "Spectral Flask of Power",
-      value: Infinity
+      value: Infinity,
     },
     171285: {
       name: "Shadowcore Oil",
-      value: Infinity
+      value: Infinity,
     },
     171349: {
       name: "Potion of Phantom Fire",
-      value: Infinity
+      value: Infinity,
     },
     171351: {
       name: "Potion of Deathly Fixation",
-      value: Infinity
+      value: Infinity,
     },
     176811: {
       name: "Potion of Sacrificial Anima",
-      value: Infinity
+      value: Infinity,
     },
     171273: {
       name: "Potion of Spectral Intellect",
-      value: Infinity
+      value: Infinity,
     },
     171275: {
       name: "Potion of Spectral Strength",
-      value: Infinity
+      value: Infinity,
     },
     171270: {
       name: "Potion of Spectral Agility",
-      value: Infinity
+      value: Infinity,
     },
-
   };
 
   const craftAmounts = [
@@ -95,138 +95,121 @@ const isWorthToCraft = () => {
         168589: 4,
         168583: 4,
         170554: 4,
-      }
+      },
     },
     {
       id: 171285,
       reagents: {
-        169701: 2
-      }
+        169701: 2,
+      },
     },
     {
       id: 171349,
       reagents: {
         168589: 3,
-        168586: 3
-      }
+        168586: 3,
+      },
     },
     {
       id: 171351,
       reagents: {
         168583: 3,
-        170554: 3
-      }
+        170554: 3,
+      },
     },
     {
       id: 176811,
       reagents: {
-        168583: 6
-      }
+        168583: 6,
+      },
     },
     {
       id: 171273,
       reagents: {
-        168589: 5
-      }
+        168589: 5,
+      },
     },
 
     {
       id: 171275,
       reagents: {
-        168586: 5
-      }
+        168586: 5,
+      },
     },
     {
       id: 171270,
       reagents: {
-        168583: 5
-      }
-    }
+        168583: 5,
+      },
+    },
   ];
 
   const generateAccessToken = async () => {
-    const formData = {
-      'grant_type': 'client_credentials'
-    };
+    const { data } = await axios.post(
+      "https://us.battle.net/oauth/token",
+      null,
+      {
+        params: {
+          grant_type: "client_credentials",
+        },
+        auth: {
+          username: CLIENTID,
+          password: CLIENTKEY,
+        },
+      }
+    );
 
-    let config = {
-      headers: {
-        Authorization: 'Basic ' + Buffer.from(CLIENTID + ":" + CLIENTKEY).toString('base64')
-    }
-    }
-
-    const body = {
-      method: 'post',
-      payload: formData,
- 
-    };
-    const url = 'https://us.battle.net/oauth/token';
-    const {data} = await axios.post(url, {body: formData}, config);
-    console.log("HELLLO", data)
-    const parsed = JSON.parse(response.getContentText());
-    return parsed.access_token;
-
+    return data.access_token;
   };
 
-  const getAuctionHouseData = (token) => {
-
-    const url = `https://us.api.blizzard.com/data/wow/connected-realm/${REALMID}/auctions?namespace=dynamic-us&locale=en_US`;
+  const updateItemPrice = async (token) => {
+    const url = `https://us.api.blizzard.com/data/wow/connected-realm/61/auctions?namespace=dynamic-us&locale=en_US`;
     const base = 10000; //copper to gold conversion factor
-    const options = {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
     };
 
-    const response = UrlFetchApp.fetch(url, options);
-    const parsed = JSON.parse(response.getContentText());
+    const { data } = await axios.get(url, config);
     const ids = new Set(Object.keys(itemMap).map(Number));
-    parsed.auctions
-      .filter(data => ids.has(data.item.id))
-      .forEach(data => {
-        const price = data.unit_price / base;
-        if (itemMap[data.item.id].value > price) {
-          itemMap[data.item.id].value = price;
+    data.auctions
+      .filter((auction) => ids.has(auction.item.id))
+      .forEach((auction) => {
+        const price = auction.unit_price / base;
+        if (itemMap[auction.item.id].value > price) {
+          itemMap[auction.item.id].value = price;
         }
       });
 
-    return Object.values(itemMap).map(item => ({ name: item.name, value: item.value.toString(), inline: true }));
+    console.log(itemMap);
   };
 
   const getCraftingCosts = () => {
-    return craftAmounts.map(item => {
-      const craftingCost = Object.entries(item.reagents).reduce((acc, [id, amount]) => {
-        return acc + itemMap[id].value * amount
-      }, 0)
+    return craftAmounts.map((item) => {
+      const craftingCost = Object.entries(item.reagents).reduce(
+        (acc, [id, amount]) => {
+          return acc + itemMap[id].value * amount;
+        },
+        0
+      );
       const priceInAH = itemMap[item.id].value;
       const difference = (priceInAH - craftingCost).toFixed(2);
       const profitOrLoss = difference > 0 ? "profit" : "loss";
-      return { name: itemMap[item.id].name, value: `You make a ${profitOrLoss} of ${difference}` }
-    })
-
-  }
+      return {
+        name: itemMap[item.id].name,
+        value: `You make a ${profitOrLoss} of ${difference}`,
+      };
+    });
+  };
 
   const generateEmbed = (color, title, fields) => {
-    return { color, title, fields };
-  }
+    return new Discord.MessageEmbed()
+      .setColor(color)
+      .setTitle(title)
+      .addFields(fields);
+  };
 
-  // const postToDiscord = (embeds) => {
-  //   const options = {
-  //     method: 'post',
-  //     contentType: 'application/json',
-  //     payload: JSON.stringify({
-  //       username: "Crafting Bot",
-  //       avatar_url: "https://symphony.com/wp-content/uploads/2019/08/build_great_chat_bots_blog.png",
-  //       embeds
-  //     }),
-  //     muteHttpExceptions: true
-  //   };
-  //   const response = UrlFetchApp.fetch(DISCORD_WEBHOOK, options);
-  // }
-
-  const token = generateAccessToken();
-  // const auctions = generateEmbed(456132, "Price in AH", getAuctionHouseData(token));
-  const craftingCosts = generateEmbed(123456, "Is it worth to craft?", getCraftingCosts());
-  return [token]
-}
+  const token = await generateAccessToken();
+  await updateItemPrice(token);
+  return generateEmbed("#0099ff", "Testing", getCraftingCosts());
+};
