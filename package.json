@@ -1,0 +1,23 @@
+{
+  "name": "craftingcost",
+  "version": "1.0.0",
+  "description": "Determines if an item is worth to craft and sell",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Taz-Z/CraftingCost.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Taz-Z/CraftingCost/issues"
+  },
+  "homepage": "https://github.com/Taz-Z/CraftingCost#readme",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0"
+  }
+}
