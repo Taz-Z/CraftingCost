@@ -1,8 +1,30 @@
+const dotenv = require('dotenv');
+dotenv.config();
+const Discord = require('discord.js');
+const { default: axios } = require('axios');
+
+const client = new Discord.Client();
+
+client.once('ready', () => {
+	console.log('Ready!');
+});
+
+client.login(process.env.TOKEN);
+
+client.on('message', message => {
+	if (message.content === '!ping') {
+		// send back "Pong." to the channel the message was sent in
+		message.channel.send('Pong.');
+	} else if(message.content === '!costs') {
+    message.channel.send(isWorthToCraft())
+  }
+});
+
 const isWorthToCraft = () => {
-  const CLIENTID = "PUT CLIENT KEY IN THESE QUOTES";
-  const CLIENTKEY = "PUT CLIENT KEY IN THESE QUOTES";
+  const CLIENTID = process.env.CLIENTID
+  const CLIENTKEY = process.env.CLIENTKEY
   const REALMID = 61 //SET THIS TO YOUR REALM ID
-  const DISCORD_WEBHOOK = "PUT DISCORD WEBHOOK URL HERE"
+  const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK
 
   const itemMap = {
     168589: {
@@ -122,20 +144,25 @@ const isWorthToCraft = () => {
     }
   ];
 
-  const generateAccessToken = () => {
+  const generateAccessToken = async () => {
     const formData = {
       'grant_type': 'client_credentials'
     };
 
-    const options = {
+    let config = {
+      headers: {
+        Authorization: 'Basic ' + Buffer.from(CLIENTID + ":" + CLIENTKEY).toString('base64')
+    }
+    }
+
+    const body = {
       method: 'post',
       payload: formData,
-      headers: {
-        Authorization: 'Basic ' + Utilities.base64Encode(CLIENTID + ":" + CLIENTKEY)
-      }
+ 
     };
     const url = 'https://us.battle.net/oauth/token';
-    const response = UrlFetchApp.fetch(url, options);
+    const {data} = await axios.post(url, {body: formData}, config);
+    console.log("HELLLO", data)
     const parsed = JSON.parse(response.getContentText());
     return parsed.access_token;
 
@@ -184,22 +211,22 @@ const isWorthToCraft = () => {
     return { color, title, fields };
   }
 
-  const postToDiscord = (embeds) => {
-    const options = {
-      method: 'post',
-      contentType: 'application/json',
-      payload: JSON.stringify({
-        username: "Crafting Bot",
-        avatar_url: "https://symphony.com/wp-content/uploads/2019/08/build_great_chat_bots_blog.png",
-        embeds
-      }),
-      muteHttpExceptions: true
-    };
-    const response = UrlFetchApp.fetch(DISCORD_WEBHOOK, options);
-  }
+  // const postToDiscord = (embeds) => {
+  //   const options = {
+  //     method: 'post',
+  //     contentType: 'application/json',
+  //     payload: JSON.stringify({
+  //       username: "Crafting Bot",
+  //       avatar_url: "https://symphony.com/wp-content/uploads/2019/08/build_great_chat_bots_blog.png",
+  //       embeds
+  //     }),
+  //     muteHttpExceptions: true
+  //   };
+  //   const response = UrlFetchApp.fetch(DISCORD_WEBHOOK, options);
+  // }
 
   const token = generateAccessToken();
-  const auctions = generateEmbed(456132, "Price in AH", getAuctionHouseData(token));
+  // const auctions = generateEmbed(456132, "Price in AH", getAuctionHouseData(token));
   const craftingCosts = generateEmbed(123456, "Is it worth to craft?", getCraftingCosts());
-  postToDiscord([auctions, craftingCosts]);
+  return [token]
 }
