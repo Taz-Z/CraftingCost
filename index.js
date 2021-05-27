@@ -1,31 +1,36 @@
 const dotenv = require("dotenv");
 dotenv.config();
 const Discord = require("discord.js");
-const FormData = require("form-data");
 const { default: axios } = require("axios");
 
+const prefix = "!";
 const client = new Discord.Client();
-
-client.once("ready", () => {
-  console.log("Ready!");
-});
 
 client.login(process.env.TOKEN);
 
 client.on("message", async (message) => {
-  if (message.content === "!ping") {
-    // send back "Pong." to the channel the message was sent in
+  const args = message.content.slice(prefix.length).trim().split(" ");
+  const command = args.shift().toLowerCase();
+  console.log(args);
+  if (command === "ping") {
     message.channel.send("Pong.");
-  } else if (message.content === "!costs") {
-    message.channel.send(await isWorthToCraft());
+  } else if (command === "costs") {
+    message.channel.send("...Loading Auction House Data...");
+    let serverName = "Bleeding";
+    if (args.length) {
+      serverName = args[0];
+    }
+    try {
+      message.channel.send(await isWorthToCraft(serverName));
+    } catch (e) {
+      message.channel.send(e.message);
+    }
   }
 });
 
-const isWorthToCraft = async () => {
+const isWorthToCraft = async (serverName) => {
   const CLIENTID = process.env.CLIENTID;
   const CLIENTKEY = process.env.CLIENTKEY;
-  const REALMID = 61; //SET THIS TO YOUR REALM ID
-  const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK;
 
   const itemMap = {
     168589: {
@@ -162,8 +167,22 @@ const isWorthToCraft = async () => {
     return data.access_token;
   };
 
+  const getServerID = async (token) => {
+    console.log("My server name is: " + serverName);
+    const { data } = await axios.get(
+      `https://us.api.blizzard.com/data/wow/search/connected-realm?namespace=dynamic-us&realms.name.en_US=${serverName}&access_token=${token}`
+    );
+
+    if (data.results && data.results.length) {
+      serverName = data.results[0].data.realms[0].name.en_US;
+      return data.results[0].data.id;
+    }
+    throw Error("Server not found");
+  };
+
   const updateItemPrice = async (token) => {
-    const url = `https://us.api.blizzard.com/data/wow/connected-realm/61/auctions?namespace=dynamic-us&locale=en_US`;
+    const realmID = await getServerID(token);
+    const url = `https://us.api.blizzard.com/data/wow/connected-realm/${realmID}/auctions?namespace=dynamic-us&locale=en_US`;
     const base = 10000; //copper to gold conversion factor
 
     const config = {
@@ -211,5 +230,9 @@ const isWorthToCraft = async () => {
 
   const token = await generateAccessToken();
   await updateItemPrice(token);
-  return generateEmbed("#0099ff", "Testing", getCraftingCosts());
+  return generateEmbed(
+    "#0099ff",
+    `Crafting Profits for ${serverName}`,
+    getCraftingCosts()
+  );
 };
