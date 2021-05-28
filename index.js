@@ -39,5 +39,6 @@ client.on("message", async (message) => {
       let [name, ...server] = args;
       server = server.join("");
       message.channel.send(await parseFetcher.getParses(name, server));
+      break;
   }
 });

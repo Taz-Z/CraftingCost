@@ -46,7 +46,7 @@ exports.getParses = async (name, server) => {
   const avgParses = formatBosses();
   const topAvg = avgParses[0];
   const avg = avgParses[1];
-  return formatPrints(topAvg, avg);
+  return formatPrints(topAvg, avg, name, server);
 };
 
 const formatBosses = () => {
@@ -65,7 +65,7 @@ const formatBosses = () => {
   return [bestAvgSum / flexCount, avgSum / flexCount];
 };
 
-const formatPrints = (topAvg, avg) => {
+const formatPrints = (topAvg, avg, name, server) => {
   const printStatements = [{ name: "Best Average", value: topAvg.toFixed(2) }];
   for (const boss in bosses) {
     const currBoss = bosses[boss];
@@ -74,7 +74,11 @@ const formatPrints = (topAvg, avg) => {
       value: currBoss.best.toFixed(2),
     });
   }
-  return helper.generateEmbed("#000000", "Parses", printStatements);
+  return helper.generateEmbed(
+    "#000000",
+    `Parses for ${name}-${server}`,
+    printStatements
+  );
 };
 
 /**

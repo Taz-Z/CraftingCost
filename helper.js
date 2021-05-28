@@ -10,8 +10,11 @@ exports.generateEmbed = (color, title, fields) => {
 exports.commands = [
   { name: "!ping", value: "Will respond with pong to determine server status" },
   {
-    name: "!costs",
-    value:
-      "Accepts an additional argument (server) and displays the profit margin on items",
+    name: "!costs $SERVER",
+    value: "Displays the profit margin of items on specified $SERVER",
+  },
+  {
+    name: "!parses $NAME $SERVER",
+    value: "Displays top mythic parses for $NAME-$SERVER",
   },
 ];
