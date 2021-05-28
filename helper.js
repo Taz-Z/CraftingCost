@@ -14,4 +14,8 @@ export const commands = [
     name: "!parses $NAME $SERVER",
     value: "Displays top mythic parses for $NAME-$SERVER",
   },
+  {
+    name: "!affixes",
+    value: "Displays m+ affixes for the week",
+  },
 ];

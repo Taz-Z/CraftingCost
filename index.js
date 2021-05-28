@@ -4,6 +4,7 @@ import { generateEmbed, commands } from "./helper.js";
 import { isWorthToCraft } from "./commands/craftingCosts.js";
 import { getParses } from "./commands/warcraftLogs.js";
 import { getWhales } from "./commands/memes.js";
+import { getAffixes } from "./commands/raiderio.js";
 
 const prefix = "!";
 const client = new Client();
@@ -39,6 +40,9 @@ client.on("message", async (message) => {
       break;
     case "matt":
       message.channel.send(getWhales());
+      break;
+    case "affixes":
+      message.channel.send(await getAffixes());
       break;
   }
 });
