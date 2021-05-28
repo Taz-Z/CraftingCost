@@ -18,4 +18,8 @@ export const commands = [
     name: "!affixes",
     value: "Displays m+ affixes for the week",
   },
+  {
+    name: "!math $EXPRESSION",
+    value: "Calculates an given $EXPRESSION",
+  },
 ];

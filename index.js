@@ -5,6 +5,7 @@ import { isWorthToCraft } from "./commands/craftingCosts.js";
 import { getParses } from "./commands/warcraftLogs.js";
 import { getWhales } from "./commands/memes.js";
 import { getAffixes } from "./commands/raiderio.js";
+import { calculate } from "./commands/calculator.js";
 
 const prefix = "!";
 const client = new Client();
@@ -43,6 +44,9 @@ client.on("message", async (message) => {
       break;
     case "affixes":
       message.channel.send(await getAffixes());
+      break;
+    case "math":
+      message.channel.send(calculate(args.join("")));
       break;
   }
 });
