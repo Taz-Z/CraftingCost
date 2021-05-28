@@ -1,9 +1,10 @@
 const dotenv = require("dotenv");
+dotenv.config();
+
 const Discord = require("discord.js");
 const helper = require("./helper");
 const craftingCost = require("./craftingCosts");
-
-dotenv.config();
+const parseFetcher = require("./warcraftLogs");
 
 const prefix = "!";
 const client = new Discord.Client();
@@ -34,5 +35,9 @@ client.on("message", async (message) => {
         message.channel.send(e.message);
       }
       break;
+    case "parses":
+      let [name, ...server] = args;
+      server = server.join("");
+      message.channel.send(await parseFetcher.getParses(name, server));
   }
 });

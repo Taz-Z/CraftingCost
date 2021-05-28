@@ -1,4 +1,5 @@
 const helper = require("./helper");
+const { default: axios } = require("axios");
 
 const LOGS_KEY = process.env.LOGS_KEY;
 const WARCRAFT_LOGS_URL =
@@ -17,7 +18,7 @@ function boss(name) {
   this.parses = [];
 }
 
-var bosses = {
+const bosses = {
   2398: new boss("Shriekwing"), //Get ID from warcraft logs
   2418: new boss("Huntsman Altimor"),
   2383: new boss("Hungering Destroyer"),
@@ -33,32 +34,27 @@ var bosses = {
 /**
  * Get all best parse/boss
  **/
-exports.getParses = (name, server) => {
-  var url =
+exports.getParses = async (name, server) => {
+  const url =
     WARCRAFT_LOGS_URL + name + "/" + server + "/us" + WARCRAFT_LOGS_QUERY; //full logs url to post to
-
-  try {
-    var allParses = JSON.parse(UrlFetchApp.fetch(url).getContentText());
-    for (var key in allParses) {
-      var currParse = allParses[key];
-      if (currParse.difficulty === MYTHIC_DIFFICULTY)
-        bosses[currParse.encounterID].parses.push(currParse.percentile);
-    }
-    var avgParses = formatBosses();
-    var topAvg = avgParses[0];
-    var avg = avgParses[1];
-    return formatPrints(topAvg, avg);
-  } catch (error) {
-    return " \nIncorrect log url format provided";
+  const { data } = await axios.get(url);
+  for (const key in data) {
+    const currParse = data[key];
+    if (currParse.difficulty === MYTHIC_DIFFICULTY)
+      bosses[currParse.encounterID].parses.push(currParse.percentile);
   }
+  const avgParses = formatBosses();
+  const topAvg = avgParses[0];
+  const avg = avgParses[1];
+  return formatPrints(topAvg, avg);
 };
 
 const formatBosses = () => {
-  var bestAvgSum = 0;
-  var avgSum = 0;
-  var flexCount = Object.keys(bosses).length;
-  for (var id in bosses) {
-    var boss = bosses[id];
+  let bestAvgSum = 0;
+  let avgSum = 0;
+  let flexCount = Object.keys(bosses).length;
+  for (const id in bosses) {
+    const boss = bosses[id];
     if (boss.parses.length <= 0) {
       flexCount--;
       continue;
@@ -70,25 +66,23 @@ const formatBosses = () => {
 };
 
 const formatPrints = (topAvg, avg) => {
-  var printStatements = [
-    { name: "Averages", value: `Best: ${topAvg} Avg: ${avg}` },
-  ];
-  for (var boss in bosses) {
-    var currBoss = bosses[boss];
+  const printStatements = [{ name: "Best Average", value: topAvg.toFixed(2) }];
+  for (const boss in bosses) {
+    const currBoss = bosses[boss];
     printStatements.push({
       name: currBoss.name,
-      value: `Best: ${currBoss.best} Avg: ${currBoss.avg}`,
+      value: currBoss.best.toFixed(2),
     });
   }
-  return printStatements;
+  return helper.generateEmbed("#000000", "Parses", printStatements);
 };
 
 /**
  * Give mean of array
  **/
 const getMean = (parses) => {
-  var sum = 0;
-  var count = parses.length;
-  for (var parse in parses) sum += parses[parse];
+  let sum = 0;
+  const count = parses.length;
+  for (const parse in parses) sum += parses[parse];
   return Math.floor(sum / count);
 };
