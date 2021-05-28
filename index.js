@@ -11,7 +11,6 @@ client.login(process.env.TOKEN);
 client.on("message", async (message) => {
   const args = message.content.slice(prefix.length).trim().split(" ");
   const command = args.shift().toLowerCase();
-  console.log(args);
   if (command === "ping") {
     message.channel.send("Pong.");
   } else if (command === "costs") {
