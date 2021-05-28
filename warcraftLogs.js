@@ -18,23 +18,23 @@ function boss(name) {
   this.parses = [];
 }
 
-const bosses = {
-  2398: new boss("Shriekwing"), //Get ID from warcraft logs
-  2418: new boss("Huntsman Altimor"),
-  2383: new boss("Hungering Destroyer"),
-  2406: new boss("Lady Inerva"),
-  2402: new boss("Sun King"),
-  2405: new boss("Artificer Xymox"),
-  2412: new boss("Council of Blood"),
-  2399: new boss("Sludgefist"),
-  2417: new boss("Stone Legion Generals"),
-  2407: new boss("Sire Denathrius"),
-};
-
 /**
  * Get all best parse/boss
  **/
 exports.getParses = async (name, server) => {
+  const bosses = {
+    2398: new boss("Shriekwing"), //Get ID from warcraft logs
+    2418: new boss("Huntsman Altimor"),
+    2383: new boss("Hungering Destroyer"),
+    2406: new boss("Lady Inerva"),
+    2402: new boss("Sun King"),
+    2405: new boss("Artificer Xymox"),
+    2412: new boss("Council of Blood"),
+    2399: new boss("Sludgefist"),
+    2417: new boss("Stone Legion Generals"),
+    2407: new boss("Sire Denathrius"),
+  };
+
   const url =
     WARCRAFT_LOGS_URL + name + "/" + server + "/us" + WARCRAFT_LOGS_QUERY; //full logs url to post to
   const { data } = await axios.get(url);
@@ -43,13 +43,13 @@ exports.getParses = async (name, server) => {
     if (currParse.difficulty === MYTHIC_DIFFICULTY)
       bosses[currParse.encounterID].parses.push(currParse.percentile);
   }
-  const avgParses = formatBosses();
+  const avgParses = formatBosses(bosses);
   const topAvg = avgParses[0];
   const avg = avgParses[1];
-  return formatPrints(topAvg, avg, name, server);
+  return formatPrints(bosses, topAvg, avg, name, server);
 };
 
-const formatBosses = () => {
+const formatBosses = (bosses) => {
   let bestAvgSum = 0;
   let avgSum = 0;
   let flexCount = Object.keys(bosses).length;
@@ -65,7 +65,7 @@ const formatBosses = () => {
   return [bestAvgSum / flexCount, avgSum / flexCount];
 };
 
-const formatPrints = (topAvg, avg, name, server) => {
+const formatPrints = (bosses, topAvg, avg, name, server) => {
   const printStatements = [{ name: "Best Average", value: topAvg.toFixed(2) }];
   for (const boss in bosses) {
     const currBoss = bosses[boss];
