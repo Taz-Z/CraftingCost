@@ -16,9 +16,7 @@ client.on("message", async (message) => {
   const command = args.shift().toLowerCase();
   switch (command) {
     case "help":
-      message.channel.send(
-        generateEmbed("#FFFFFF", "Bot Commands", commands)
-      );
+      message.channel.send(generateEmbed("#FFFFFF", "Bot Commands", commands));
       break;
     case "ping":
       message.channel.send("Pong.");
