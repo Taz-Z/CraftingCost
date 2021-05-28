@@ -31,7 +31,7 @@ client.on("message", async (message) => {
         message.channel.send(e.message);
       }
       break;
-    case "parse":
+    case "parses":
       let [name, ...server] = args;
       server = server.join("");
       message.channel.send(await getParses(name, server));

@@ -141,7 +141,6 @@ export async function isWorthToCraft(serverName) {
   };
 
   const getServerID = async (token) => {
-    console.log("My server name is: " + serverName);
     const { data } = await axios.get(
       `https://us.api.blizzard.com/data/wow/search/connected-realm?namespace=dynamic-us&realms.name.en_US=${serverName}&access_token=${token}`
     );
@@ -172,8 +171,6 @@ export async function isWorthToCraft(serverName) {
           itemMap[auction.item.id].value = price;
         }
       });
-
-    console.log(itemMap);
   };
 
   const getCraftingCosts = () => {
