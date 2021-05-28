@@ -1,5 +1,5 @@
-const helper = require("./helper");
-const { default: axios } = require("axios");
+import { generateEmbed } from "./helper";
+import { default as axios } from "axios";
 
 const LOGS_KEY = process.env.LOGS_KEY;
 const WARCRAFT_LOGS_URL =
@@ -21,7 +21,7 @@ function boss(name) {
 /**
  * Get all best parse/boss
  **/
-exports.getParses = async (name, server) => {
+export async function getParses(name, server) {
   const bosses = {
     2398: new boss("Shriekwing"), //Get ID from warcraft logs
     2418: new boss("Huntsman Altimor"),
@@ -47,7 +47,7 @@ exports.getParses = async (name, server) => {
   const topAvg = avgParses[0];
   const avg = avgParses[1];
   return formatPrints(bosses, topAvg, avg, name, server);
-};
+}
 
 const formatBosses = (bosses) => {
   let bestAvgSum = 0;
@@ -74,7 +74,7 @@ const formatPrints = (bosses, topAvg, avg, name, server) => {
       value: currBoss.best.toFixed(2),
     });
   }
-  return helper.generateEmbed(
+  return generateEmbed(
     "#000000",
     `Parses for ${name}-${server}`,
     printStatements

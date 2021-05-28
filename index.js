@@ -1,13 +1,13 @@
-const dotenv = require("dotenv");
-dotenv.config();
+import { config } from "dotenv";
+config();
 
-const Discord = require("discord.js");
-const helper = require("./helper");
-const craftingCost = require("./craftingCosts");
-const parseFetcher = require("./warcraftLogs");
+import { Client } from "discord.js";
+import { generateEmbed, commands } from "./helper";
+import { isWorthToCraft } from "./craftingCosts";
+import { getParses } from "./warcraftLogs";
 
 const prefix = "!";
-const client = new Discord.Client();
+const client = new Client();
 
 client.login(process.env.TOKEN);
 
@@ -17,7 +17,7 @@ client.on("message", async (message) => {
   switch (command) {
     case "help":
       message.channel.send(
-        helper.generateEmbed("#FFFFFF", "Bot Commands", helper.commands)
+        generateEmbed("#FFFFFF", "Bot Commands", commands)
       );
       break;
     case "ping":
@@ -30,7 +30,7 @@ client.on("message", async (message) => {
         serverName = args[0];
       }
       try {
-        message.channel.send(await craftingCost.isWorthToCraft(serverName));
+        message.channel.send(await isWorthToCraft(serverName));
       } catch (e) {
         message.channel.send(e.message);
       }
@@ -38,7 +38,7 @@ client.on("message", async (message) => {
     case "parses":
       let [name, ...server] = args;
       server = server.join("");
-      message.channel.send(await parseFetcher.getParses(name, server));
+      message.channel.send(await getParses(name, server));
       break;
   }
 });

@@ -1,13 +1,13 @@
-const Discord = require("discord.js");
+import { MessageEmbed } from "discord.js";
 
-exports.generateEmbed = (color, title, fields) => {
-  return new Discord.MessageEmbed()
+export function generateEmbed(color, title, fields) {
+  return new MessageEmbed()
     .setColor(color)
     .setTitle(title)
     .addFields(fields);
-};
+}
 
-exports.commands = [
+export const commands = [
   { name: "!ping", value: "Will respond with pong to determine server status" },
   {
     name: "!costs $SERVER",

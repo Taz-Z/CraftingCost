@@ -1,7 +1,7 @@
-const { default: axios } = require("axios");
-const helper = require("./helper");
+import { default as axios } from "axios";
+import { generateEmbed } from "./helper";
 
-exports.isWorthToCraft = async (serverName) => {
+export async function isWorthToCraft(serverName) {
   const CLIENTID = process.env.CLIENTID;
   const CLIENTKEY = process.env.CLIENTKEY;
 
@@ -196,9 +196,9 @@ exports.isWorthToCraft = async (serverName) => {
 
   const token = await generateAccessToken();
   await updateItemPrice(token);
-  return helper.generateEmbed(
+  return generateEmbed(
     "#0099ff",
     `Crafting Profits for ${serverName}`,
     getCraftingCosts()
   );
-};
+}
