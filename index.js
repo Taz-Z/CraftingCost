@@ -1,10 +1,8 @@
-import { config } from "dotenv";
-config();
-
+import "./bootstrap.js";
 import { Client } from "discord.js";
-import { generateEmbed, commands } from "./helper";
-import { isWorthToCraft } from "./craftingCosts";
-import { getParses } from "./warcraftLogs";
+import { generateEmbed, commands } from "./helper.js";
+import { isWorthToCraft } from "./craftingCosts.js";
+import { getParses } from "./warcraftLogs.js";
 
 const prefix = "!";
 const client = new Client();
@@ -33,7 +31,7 @@ client.on("message", async (message) => {
         message.channel.send(e.message);
       }
       break;
-    case "parses":
+    case "parse":
       let [name, ...server] = args;
       server = server.join("");
       message.channel.send(await getParses(name, server));

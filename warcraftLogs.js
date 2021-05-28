@@ -1,6 +1,5 @@
-import { generateEmbed } from "./helper";
+import { generateEmbed } from "./helper.js";
 import { default as axios } from "axios";
-import { parse } from "dotenv";
 
 const WARCRAFT_LOGS_URL =
   "https://www.warcraftlogs.com:443/v1/rankings/character/";
@@ -16,9 +15,10 @@ export async function getParses(name, server) {
   const url =
     WARCRAFT_LOGS_URL + name + "/" + server + "/us" + WARCRAFT_LOGS_QUERY; //full logs url to post to
   const { data } = await axios.get(url);
-  const bosses = getAverageParse(data);
+  const bosses = getBosses(data);
+
   const avgParse = getAverageParse(bosses);
-  return formatPrints(bosses, topAvg, name, server);
+  return formatPrints(bosses, avgParse, name, server);
 }
 
 const getBosses = (data) => {
@@ -43,13 +43,13 @@ const getBosses = (data) => {
 const getAverageParse = (bosses) => {
   const bossObj = Object.values(bosses);
   return (
-    bossObj.reduce((sum, boss) => sum + boss.percentile, 0) / bossObj.length
+    bossObj.reduce((sum, boss) => sum + boss.parse, 0) / bossObj.length
   );
 };
 
 const formatPrints = (bosses, topAvg, name, server) => {
   const printStatements = Object.values(bosses).reduce(
-    (arr, boss) => [...arr, { name: boss.name, value: boss.parse }],
+    (arr, boss) => [...arr, { name: boss.name, value: boss.parse.toFixed(2) }],
     [{ name: "Best Average", value: topAvg.toFixed(2) }]
   );
 

@@ -1,5 +1,5 @@
 import { default as axios } from "axios";
-import { generateEmbed } from "./helper";
+import { generateEmbed } from "./helper.js";
 
 export async function isWorthToCraft(serverName) {
   const CLIENTID = process.env.CLIENTID;
