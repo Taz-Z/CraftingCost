@@ -1,4 +1,4 @@
-import { generateEmbed } from "./helper.js";
+import { generateEmbed } from "..//helper.js";
 import { default as axios } from "axios";
 
 const WARCRAFT_LOGS_URL =

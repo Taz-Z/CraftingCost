@@ -1,8 +1,9 @@
 import "./bootstrap.js";
 import { Client } from "discord.js";
 import { generateEmbed, commands } from "./helper.js";
-import { isWorthToCraft } from "./craftingCosts.js";
-import { getParses } from "./warcraftLogs.js";
+import { isWorthToCraft } from "./commands/craftingCosts.js";
+import { getParses } from "./commands/warcraftLogs.js";
+import { getWhales } from "./commands/memes.js";
 
 const prefix = "!";
 const client = new Client();
@@ -37,14 +38,7 @@ client.on("message", async (message) => {
       message.channel.send(await getParses(name, server));
       break;
     case "matt":
-      message.channel.send(
-        generateEmbed("#0000FF", "Biggest Whale NA?", [
-          { name: "Xinthel", value: ":whale:" },
-          { name: "Matt", value: ":whale:" },
-          { name: "Matthew", value: ":whale:" },
-          { name: "Mattyesh", value: ":whale:" },
-        ])
-      );
+      message.channel.send(getWhales());
       break;
   }
 });
