@@ -42,9 +42,7 @@ const getBosses = (data) => {
 
 const getAverageParse = (bosses) => {
   const bossObj = Object.values(bosses);
-  return (
-    bossObj.reduce((sum, boss) => sum + boss.parse, 0) / bossObj.length
-  );
+  return bossObj.reduce((sum, boss) => sum + boss.parse, 0) / bossObj.length;
 };
 
 const formatPrints = (bosses, topAvg, name, server) => {
