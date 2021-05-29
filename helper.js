@@ -1,5 +1,12 @@
 import { MessageEmbed } from "discord.js";
 
-export function generateEmbed(color, title, fields) {
-  return new MessageEmbed().setColor(color).setTitle(title).addFields(fields);
-}
+export const generateEmbed = (color, title, fields) =>
+  new MessageEmbed().setColor(color).setTitle(title).addFields(fields);
+
+export const command = (name, description, usage, execute, args = false) => ({
+  name,
+  description,
+  usage,
+  execute,
+  args,
+});

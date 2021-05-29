@@ -1,9 +1,5 @@
-const ping = {
-  name: "ping",
-  description: "Ping!",
-  execute: (message, args) => {
-    message.channel.send("Pong.");
-  },
-};
+import { command } from "../../helper.js";
 
-export default ping;
+export default command("ping", "Ping!", "!ping", (message, args) => {
+  message.channel.send("Pong.");
+});
