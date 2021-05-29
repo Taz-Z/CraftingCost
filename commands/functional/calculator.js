@@ -12,6 +12,6 @@ export default command(
   "math",
   execute,
   "Performs basic calculates given an expression",
-  "!math 1+1",
+  "1+1",
   true
 );

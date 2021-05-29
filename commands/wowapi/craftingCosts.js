@@ -213,5 +213,5 @@ export default command(
   "costs",
   execute,
   "Displays the costs of consumables on a given realm",
-  "!costs zul'jin"
+  "zul'jin"
 );

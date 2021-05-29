@@ -71,6 +71,6 @@ export default command(
   "parses",
   execute,
   "Displays mythic parses for the current tier",
-  "!parse tazdrael bleeding hollow",
+  "tazdrael bleeding hollow",
   true
 );
