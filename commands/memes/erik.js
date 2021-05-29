@@ -1,7 +1,7 @@
 import { command, generateEmbed } from "../../helper.js";
 
 const execute = (message, args) => {
-  message.channel.send("Erik is fabulously gay!");
+  message.channel.send("*Insert gay joke here*");
 };
 
 export default command("erik", execute);
