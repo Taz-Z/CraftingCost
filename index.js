@@ -33,5 +33,9 @@ client.on("message", async (message) => {
       `You didn't provide any arguments, ${message.author}!`
     );
   }
-  command.execute(message, args);
+  try {
+    command.execute(message, args);
+  } catch (e) {
+    console.error(e);
+  }
 });

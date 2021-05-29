@@ -1,20 +1,14 @@
-import { generateEmbed } from "../../helper.js";
+import { command, generateEmbed } from "../../helper.js";
 
-const getWhales = () => {
-  return generateEmbed("#0000FF", "Biggest Whale NA?", [
-    { name: "Xinthel", value: ":whale:" },
-    { name: "Matt", value: ":whale:" },
-    { name: "Matthew", value: ":whale:" },
-    { name: "Mattyesh", value: ":whale:" },
-  ]);
+const execute = (message, args) => {
+  message.channel.send(
+    generateEmbed("#0000FF", "Biggest Whale NA?", [
+      { name: "Xinthel", value: ":whale:" },
+      { name: "Matt", value: ":whale:" },
+      { name: "Matthew", value: ":whale:" },
+      { name: "Mattyesh", value: ":whale:" },
+    ])
+  );
 };
 
-const matt = {
-  name: "matt",
-  description: "cost",
-  execute: (message, args) => {
-    message.channel.send(getWhales());
-  },
-};
-
-export default matt;
+export default command("matt", execute);

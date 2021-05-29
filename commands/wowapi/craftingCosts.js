@@ -1,5 +1,5 @@
 import { default as axios } from "axios";
-import { generateEmbed } from "../../helper.js";
+import { command, generateEmbed } from "../../helper.js";
 
 async function isWorthToCraft(serverName) {
   const CLIENTID = process.env.CLIENTID;
@@ -200,17 +200,18 @@ async function isWorthToCraft(serverName) {
   );
 }
 
-const cost = {
-  name: "costs",
-  description: "cost",
-  execute: async (message, args) => {
-    message.channel.send("...Loading Auction House Data...");
-    let serverName = "Bleeding";
-    if (args.length) {
-      serverName = args[0];
-    }
-    message.channel.send(await isWorthToCraft(serverName));
-  },
+const execute = async (message, args) => {
+  message.channel.send("...Loading Auction House Data...");
+  let serverName = "Bleeding";
+  if (args.length) {
+    serverName = args[0];
+  }
+  message.channel.send(await isWorthToCraft(serverName));
 };
 
-export default cost;
+export default command(
+  "costs",
+  execute,
+  "Displays the costs of consumables on a given realm",
+  "!costs zul'jin"
+);

@@ -1,5 +1,7 @@
 import { command } from "../../helper.js";
 
-export default command("ping", "Ping!", "!ping", (message, args) => {
+const execute = (message, args) => {
   message.channel.send("Pong.");
-});
+};
+
+export default command("ping", execute, "Pings the server to see if it is up");

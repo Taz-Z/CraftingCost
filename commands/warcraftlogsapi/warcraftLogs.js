@@ -1,4 +1,4 @@
-import { generateEmbed } from "../../helper.js";
+import { command, generateEmbed } from "../../helper.js";
 import { default as axios } from "axios";
 
 const WARCRAFT_LOGS_URL =
@@ -8,9 +8,6 @@ const WARCRAFT_LOGS_QUERY =
 const HEROIC_DIFFICULTY = 4; //ID of heroic fights, can be retrieved from warcraft logs
 const MYTHIC_DIFFICULTY = 5; //ID of mythic fights
 
-/**
- * Get all best parse/boss
- **/
 async function getParses(name, server) {
   const url =
     WARCRAFT_LOGS_URL + name + "/" + server + "/us" + WARCRAFT_LOGS_QUERY; //full logs url to post to
@@ -58,15 +55,22 @@ const formatPrints = (bosses, topAvg, name, server) => {
   );
 };
 
+const execute = async (message, args) => {
+  let [name, ...server] = args;
+  server = server.join("");
+  message.channel.send(await getParses(name, server));
+};
+
 const parse = {
   name: "parses",
   description: "parses",
   args: true,
-  execute: async (message, args) => {
-    let [name, ...server] = args;
-    server = server.join("");
-    message.channel.send(await getParses(name, server));
-  },
 };
 
-export default parse;
+export default command(
+  "parses",
+  execute,
+  "Displays mythic parses for the current tier",
+  "!parse tazdrael bleeding hollow",
+  true
+);
