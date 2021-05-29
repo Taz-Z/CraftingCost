@@ -27,11 +27,15 @@ client.on("message", async (message) => {
   const args = message.content.slice(prefix.length).trim().split(" ");
   const commandName = args.shift().toLowerCase();
   const command = client.commands.get(commandName);
-  if (!command) return;
+  if (!command) {
+    return message.channel.send(
+      `That command doesn't exist ${message.author}! Type !help to see all commands available.`
+    );
+  }
   if (command.args && !args.length) {
     let reply = `You didn't provide any arguments, ${message.author}!`;
     if (command.usage) {
-      reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
+      reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\`.`;
     }
     return message.channel.send(reply);
   }
