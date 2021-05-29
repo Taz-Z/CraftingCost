@@ -1,4 +1,4 @@
-import { generateEmbed } from "../helper.js";
+import { generateEmbed } from "../../helper.js";
 
 const getWhales = () => {
   return generateEmbed("#0000FF", "Biggest Whale NA?", [
@@ -9,7 +9,7 @@ const getWhales = () => {
   ]);
 };
 
-const meme = {
+const matt = {
   name: "matt",
   description: "cost",
   execute: (message, args) => {
@@ -17,4 +17,4 @@ const meme = {
   },
 };
 
-export default meme;
+export default matt;

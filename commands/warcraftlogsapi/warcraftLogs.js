@@ -1,4 +1,4 @@
-import { generateEmbed } from "..//helper.js";
+import { generateEmbed } from "../../helper.js";
 import { default as axios } from "axios";
 
 const WARCRAFT_LOGS_URL =
@@ -61,6 +61,7 @@ const formatPrints = (bosses, topAvg, name, server) => {
 const parse = {
   name: "parses",
   description: "parses",
+  args: true,
   execute: async (message, args) => {
     let [name, ...server] = args;
     server = server.join("");

@@ -8,14 +8,16 @@ const client = new Client();
 client.login(process.env.TOKEN);
 client.commands = new Collection();
 
-const commandFiles = fs
-  .readdirSync("./commands")
-  .filter((file) => file.endsWith(".js"));
-for (const file of commandFiles) {
-  const command = await import(`./commands/${file}`);
-  // set a new item in the Collection
-  // with the key as the command name and the value as the exported module
-  client.commands.set(command.default.name, command.default);
+const commandFolders = fs.readdirSync("./commands");
+
+for (const folder of commandFolders) {
+  const commandFiles = fs
+    .readdirSync(`./commands/${folder}`)
+    .filter((file) => file.endsWith(".js"));
+  for (const file of commandFiles) {
+    const command = await import(`./commands/${folder}/${file}`);
+    client.commands.set(command.default.name, command.default);
+  }
 }
 
 client.on("message", async (message) => {
@@ -23,11 +25,13 @@ client.on("message", async (message) => {
     return;
   }
   const args = message.content.slice(prefix.length).trim().split(" ");
-  const command = args.shift().toLowerCase();
-  try {
-    const commandObj = client.commands.get(command);
-    if (commandObj) commandObj.execute(message, args);
-  } catch (error) {
-    console.error(error);
+  const commandName = args.shift().toLowerCase();
+  const command = client.commands.get(commandName);
+  if (!command) return;
+  if (command.args && !args.length) {
+    return message.channel.send(
+      `You didn't provide any arguments, ${message.author}!`
+    );
   }
+  command.execute(message, args);
 });

@@ -1,4 +1,4 @@
-import { generateEmbed } from "..//helper.js";
+import { generateEmbed } from "../../helper.js";
 import { default as axios } from "axios";
 
 const url = "https://raider.io/api/v1/mythic-plus/affixes?region=us&locale=en";
