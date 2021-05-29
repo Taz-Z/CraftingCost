@@ -1,7 +1,7 @@
 import { default as axios } from "axios";
 import { generateEmbed } from "../helper.js";
 
-export async function isWorthToCraft(serverName) {
+async function isWorthToCraft(serverName) {
   const CLIENTID = process.env.CLIENTID;
   const CLIENTKEY = process.env.CLIENTKEY;
 
@@ -199,3 +199,18 @@ export async function isWorthToCraft(serverName) {
     getCraftingCosts()
   );
 }
+
+const cost = {
+  name: "costs",
+  description: "cost",
+  execute: async (message, args) => {
+    message.channel.send("...Loading Auction House Data...");
+    let serverName = "Bleeding";
+    if (args.length) {
+      serverName = args[0];
+    }
+    message.channel.send(await isWorthToCraft(serverName));
+  },
+};
+
+export default cost;

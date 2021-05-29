@@ -11,7 +11,7 @@ const MYTHIC_DIFFICULTY = 5; //ID of mythic fights
 /**
  * Get all best parse/boss
  **/
-export async function getParses(name, server) {
+async function getParses(name, server) {
   const url =
     WARCRAFT_LOGS_URL + name + "/" + server + "/us" + WARCRAFT_LOGS_QUERY; //full logs url to post to
   const { data } = await axios.get(url);
@@ -57,3 +57,15 @@ const formatPrints = (bosses, topAvg, name, server) => {
     printStatements
   );
 };
+
+const parse = {
+  name: "parses",
+  description: "parses",
+  execute: async (message, args) => {
+    let [name, ...server] = args;
+    server = server.join("");
+    message.channel.send(await getParses(name, server));
+  },
+};
+
+export default parse;

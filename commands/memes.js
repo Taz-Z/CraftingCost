@@ -1,6 +1,6 @@
 import { generateEmbed } from "../helper.js";
 
-export const getWhales = () => {
+const getWhales = () => {
   return generateEmbed("#0000FF", "Biggest Whale NA?", [
     { name: "Xinthel", value: ":whale:" },
     { name: "Matt", value: ":whale:" },
@@ -8,3 +8,13 @@ export const getWhales = () => {
     { name: "Mattyesh", value: ":whale:" },
   ]);
 };
+
+const meme = {
+  name: "matt",
+  description: "cost",
+  execute: (message, args) => {
+    message.channel.send(getWhales());
+  },
+};
+
+export default meme;
