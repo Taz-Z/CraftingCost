@@ -46,6 +46,6 @@ export default command(
   "ar",
   execute,
   "Calculates how many days until the target AR given 2 resin refreshes/day",
-  "$CURRENT_AR $CURRENT_EXP (Optional) $TARGET_AR (Optional) -- !ar 52 | !ar 52 5000 55 | !ar 52 5000 53",
+  "ar 52 | !ar 52 5000 55 | !ar 52 5000",
   true
 );
