@@ -1,4 +1,4 @@
-import { command, generateEmbed, getRandomInt } from "../../helper.js";
+import { command, getRandomInt } from "../../helper.js";
 
 const messageChoices = [
 	"Needs a fucking hobby!",

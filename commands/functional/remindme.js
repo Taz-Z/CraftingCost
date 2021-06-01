@@ -15,9 +15,7 @@ const validateInputs = (args) => {
 };
 const execute = (message, args) => {
   const [calcTime, time, units] = validateInputs(args);
-  console.log(calcTime, time, units)
   setTimeout(() => {
-    console.log("here")
     message.channel.send(
       `${message.author} has been reminded after ${time} ${units}`
     );
