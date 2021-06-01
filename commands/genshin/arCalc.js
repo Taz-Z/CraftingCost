@@ -11,7 +11,7 @@ const cumlativeExp = [
 
 const EXP_PER_DAY = 3000;
 
-const execute = (message, args) => {
+const validateInputs = (args) => {
   let [currLevel, currExp, targetLevel] = args;
   if (!targetLevel && !currExp) {
     targetLevel = Number(currLevel) + 1;
@@ -26,10 +26,14 @@ const execute = (message, args) => {
   } else if (!currExp) {
     currExp = 0;
   }
-  
-  const cumlativeCurrExp =
-    cumlativeExp[Number(currLevel - 1)] + Number(currExp);
-  const cumlativeTarExp = cumlativeExp[Number(targetLevel - 1)];
+
+  return [currLevel, currExp, targetLevel].map(Number);
+};
+
+const execute = (message, args) => {
+  const [currLevel, currExp, targetLevel] = validateInputs(args);
+  const cumlativeCurrExp = cumlativeExp[currLevel - 1] + currExp;
+  const cumlativeTarExp = cumlativeExp[targetLevel - 1];
   const daysToLevel = Math.ceil(
     (cumlativeTarExp - cumlativeCurrExp) / EXP_PER_DAY
   );
