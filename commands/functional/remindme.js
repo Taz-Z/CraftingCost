@@ -1,4 +1,4 @@
-import { command, generateEmbed } from "../../helper.js";
+import { command } from "../../helper.js";
 
 const validateInputs = (args) => {
   let [time, units] = args;
