@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prettier": "prettier --write *.js commands/**/*.js"
+    "prettier": "prettier --write *.js models/*.js commands/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,8 @@
     "axios": "^0.21.1",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
-    "prettier": "^2.3.0"
+    "prettier": "^2.3.0",
+    "sequelize": "^6.6.2",
+    "sqlite3": "^5.0.2"
   }
 }

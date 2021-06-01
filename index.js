@@ -7,6 +7,7 @@ const client = new Client();
 
 client.login(process.env.TOKEN);
 client.commands = new Collection();
+console.log(client.guilds);
 
 const commandFolders = fs.readdirSync("./commands");
 
