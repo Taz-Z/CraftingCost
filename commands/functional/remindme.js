@@ -10,21 +10,21 @@ const validateInputs = (args) => {
   } else {
     time = Number(time) * 1000;
   }
-  return time;
+  return [calcTime, time, units];
 };
 const execute = (message, args) => {
-  const time = validateInputs(args);
+  const [calcTime, time, units] = validateInputs(args);
   setTimeout(() => {
     message.channel.send(
-      `${message.author} has been reminded after ${time / 1000} seconds`
+      `${message.author} has been reminded after ${time} ${units}`
     );
-  }, time);
+  }, calcTime);
 };
 
 export default command(
   "remindme",
   execute,
   "Pings you after the given time",
-  "2 hours",
+  "15 min",
   true
 );
