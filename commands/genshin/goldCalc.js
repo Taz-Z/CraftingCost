@@ -25,7 +25,7 @@ const execute = (message, args) => {
   const goldPerDay = LEYLINES_PER_DAY * GOLD_PER_LEYLINE;
   const daysNeeded = Math.ceil(targetGold / goldPerDay);
   message.channel.send(
-    `You need ${daysNeeded} day(s) to get ${targetGold} gold`
+    `You need ${daysNeeded} day(s) of farming gold leylines to get ${targetGold} gold`
   );
 };
 

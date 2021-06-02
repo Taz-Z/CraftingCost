@@ -34,7 +34,7 @@ const execute = (message, args) => {
     (cumlativeTarExp - cumlativeCurrExp) / EXP_PER_DAY
   );
   message.channel.send(
-    `You need ${daysToLevel} day(s) from level ${startLevel} to level ${endLevel}.`
+    `You need ${daysToLevel} day(s) of farming exp leylines to level from ${startLevel} to ${endLevel}.`
   );
 };
 
