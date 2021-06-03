@@ -111,11 +111,14 @@ const execute = (message, args) => {
               tie = [choice];
               count = newCount;
             } else if (newCount === count) {
-               tie.push(choice)
+              tie.push(choice);
             }
           }
         });
-        let string = tie.length >= 2 ? `There is a tie between ${tie.join(" and ")}` :  `The winner is: ${tie.pop()}`
+        let string =
+          tie.length >= 2
+            ? `There is a tie between ${tie.join(" and ")}`
+            : `The winner is: ${tie.pop()}`;
         message.channel.send();
       });
     });
