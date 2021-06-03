@@ -1,7 +1,9 @@
+import { Emoji } from "discord.js";
 import { command, generateEmbed } from "../../helper.js";
 
 const MAX_QUESTIONS = 10;
 const idle = 5 * 60 * 1000; // 5 minutes
+const time = 5 * 60 * 1000; // 5 minutes
 
 const emojiMap = {
   0: "0⃣",
@@ -23,28 +25,32 @@ const emojis = Object.values(emojiMap);
 const execute = (message, args) => {
   const answers = {
     question: "",
-    answers: [],
+    pollChoices: [],
   };
   const answerKeys = Object.keys(answers);
   let iter = 0;
+
   const response = () =>
     `Enter an option for the poll (${
-      10 - answers.answers.length
+      10 - answers.pollChoices.length
     } options left) or type done if you're done putting all options`;
-  const filter = (m) => m.author.id === message.author.id;
+  const messageFilter = (m) => m.author.id === message.author.id;
 
   message.author.createDM().then((channel) => {
     channel.send(
       'Please type out the poll question - Eg: "What is your favourite food"'
     );
 
-    const messageCollector = channel.createMessageCollector(filter, { idle });
+    const messageCollector = channel.createMessageCollector(messageFilter, {
+      idle,
+    });
 
     messageCollector.on("collect", (msg) => {
       if (
         msg.content.trim() === "done" ||
-        answers.answers.length >= MAX_QUESTIONS - 1
+        answers.pollChoices.length >= MAX_QUESTIONS - 1
       ) {
+        iter = Infinity;
         messageCollector.stop();
       }
       if (iter <= answerKeys.length) {
@@ -55,7 +61,7 @@ const execute = (message, args) => {
             iter++;
             break;
           case "answers":
-            answers.answers.push(msg.content);
+            answers.pollChoices.push(msg.content);
             channel.send(response());
             break;
         }
@@ -63,28 +69,48 @@ const execute = (message, args) => {
     });
 
     messageCollector.on("end", async (collected) => {
-      const description = answers.answers
+      const description = answers.pollChoices
         .map((ans, i) => emojiMap[i + 1] + ": " + ans)
         .join("\n");
       const embed = generateEmbed("", answers.question, [], description);
-      const embMsg = await channel.send(embed);
-      answers.answers.forEach(async (_, i) => {
-        await embMsg.react(emojiMap[i + 1]);
+      const embMsg = await message.channel.send(embed);
+      const emojiChoiceMap = {};
+
+      answers.pollChoices.forEach(async (ans, i) => {
+        const currEmoji = emojiMap[i + 1];
+        emojiChoiceMap[currEmoji] = ans;
+        await embMsg.react(currEmoji);
       });
       await embMsg.react(emojiMap.checkmark);
       //emojis.includes(reaction.emoji.name)
-      const reactFilter = (reaction, user) => true;
+      const reactFilter = (reaction, user) => {
+        return emojis.includes(reaction.emoji.name);
+      };
 
       const reactionCollector = embMsg.createReactionCollector(reactFilter, {
-        time: 150000,
+        time,
       });
 
       reactionCollector.on("collect", (reaction, user) => {
-        console.log(`Collected ${reaction.emoji.name} from ${user.tag}`);
+        if (
+          reaction.emoji.name === emojiMap.checkmark &&
+          user.id === message.author.id
+        ) {
+          reactionCollector.stop();
+        }
       });
 
       reactionCollector.on("end", (collected) => {
-        console.log(`Collected ${collected.size} items`);
+        let winner = answers.pollChoices[0];
+        let count = 0;
+        Object.entries(emojiChoiceMap).forEach(([emoji, choice]) => {
+          const collectedEmoji = collected.get(emoji);
+          if (collectedEmoji) {
+            const newCount = collectedEmoji.count ?? 0;
+            if (newCount > count) winner = choice;
+          }
+        });
+        message.channel.send(`The winner is: ${winner}`);
       });
     });
   });
