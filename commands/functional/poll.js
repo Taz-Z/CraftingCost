@@ -2,8 +2,8 @@ import { Emoji } from "discord.js";
 import { command, generateEmbed } from "../../helper.js";
 
 const MAX_QUESTIONS = 10;
-const idle = 5 * 60 * 1000; // 5 minutes
-const time = 5 * 60 * 1000; // 5 minutes
+const idle = 1 * 60 * 1000; // 1 minutes
+const time = 1 * 60 * 1000; // 1 minutes
 
 const emojiMap = {
   0: "0⃣",
@@ -82,7 +82,6 @@ const execute = (message, args) => {
         await embMsg.react(currEmoji);
       });
       await embMsg.react(emojiMap.checkmark);
-      //emojis.includes(reaction.emoji.name)
       const reactFilter = (reaction, user) => {
         return emojis.includes(reaction.emoji.name);
       };
