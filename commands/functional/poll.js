@@ -60,7 +60,7 @@ const execute = (message, args) => {
             channel.send(response());
             iter++;
             break;
-          case "answers":
+          case "pollChoices":
             answers.pollChoices.push(msg.content);
             channel.send(response());
             break;
