@@ -100,16 +100,23 @@ const execute = (message, args) => {
       });
 
       reactionCollector.on("end", (collected) => {
-        let winner = answers.pollChoices[0];
-        let count = 0;
+        let count = -Infinity;
+        let tie = [];
+        //Can clean with a reduce
         Object.entries(emojiChoiceMap).forEach(([emoji, choice]) => {
           const collectedEmoji = collected.get(emoji);
           if (collectedEmoji) {
             const newCount = collectedEmoji.count ?? 0;
-            if (newCount > count) winner = choice;
+            if (newCount > count) {
+              tie = [choice];
+              count = newCount;
+            } else if (newCount === count) {
+               tie.push(choice)
+            }
           }
         });
-        message.channel.send(`The winner is: ${winner}`);
+        let string = tie.length >= 2 ? `There is a tie between ${tie.join(" and ")}` :  `The winner is: ${tie.pop()}`
+        message.channel.send();
       });
     });
   });
