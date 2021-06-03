@@ -1,7 +1,13 @@
 import { MessageEmbed } from "discord.js";
 
-export const generateEmbed = (color, title, fields) =>
-  new MessageEmbed().setColor(color).setTitle(title).addFields(fields);
+export const generateEmbed = (color, title, fields, description = "") => {
+  const msg = new MessageEmbed()
+    .setColor(color)
+    .setTitle(title)
+    .addFields(fields);
+  if (description) msg.setDescription(description);
+  return msg;
+};
 
 export const getRandomInt = (min, max) => {
   min = Math.ceil(min);
