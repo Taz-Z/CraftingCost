@@ -1,4 +1,4 @@
-import { command } from "../../helper.js";
+import { command, getRandomInt } from "../../helper.js";
 
 const messageChoices = [
   "The command for this should honestly just be !theRetPally",

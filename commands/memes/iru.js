@@ -1,4 +1,4 @@
-import { command } from "../../helper.js";
+import { command, getRandomInt } from "../../helper.js";
 
 const messageChoices = [
   "The only guild leader to require a PR team and counseling staff.",
